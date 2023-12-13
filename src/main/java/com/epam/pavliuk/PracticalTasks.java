@@ -1,17 +1,30 @@
 package com.epam.pavliuk;
 
-import com.epam.pavliuk.model.Account;
-import com.epam.pavliuk.exception.TaskNotCompletedException;
-import lombok.AllArgsConstructor;
+import static java.util.Comparator.comparing;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
+import com.epam.pavliuk.exception.EntityNotFoundException;
+import com.epam.pavliuk.model.Account;
+import com.epam.pavliuk.model.Sex;
 import java.math.BigDecimal;
 import java.time.Month;
-import java.util.*;
-
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class PracticalTasks {
-
   private Collection<Account> accounts;
 
   /**
@@ -20,7 +33,8 @@ public class PracticalTasks {
    * @return account with max balance wrapped with optional
    */
   public Optional<Account> findRichestPerson() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .max(comparing(Account::getBalance));
   }
 
   /**
@@ -30,7 +44,9 @@ public class PracticalTasks {
    * @return a list of accounts
    */
   public List<Account> findAccountsByBirthdayMonth(Month birthdayMonth) {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .filter(a -> a.getBirthday().getMonth().equals(birthdayMonth))
+        .collect(toList());
   }
 
   /**
@@ -40,7 +56,8 @@ public class PracticalTasks {
    * @return a map where key is true or false, and value is list of male, and female accounts
    */
   public Map<Boolean, List<Account>> partitionMaleAccounts() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .collect(partitioningBy(a -> a.getSex().equals(Sex.MALE)));
   }
 
   /**
@@ -50,7 +67,8 @@ public class PracticalTasks {
    * @return a map where key is an email domain and value is a list of all account with such email
    */
   public Map<String, List<Account>> groupAccountsByEmailDomain() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .collect(groupingBy(a -> a.getEmail().split("@")[1]));
   }
 
   /**
@@ -59,7 +77,9 @@ public class PracticalTasks {
    * @return total number of letters of first and last names of all accounts
    */
   public int getNumOfLettersInFirstAndLastNames() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .mapToInt(a -> a.getFirstName().length() + a.getLastName().length())
+        .sum();
   }
 
   /**
@@ -68,7 +88,9 @@ public class PracticalTasks {
    * @return total balance of all accounts
    */
   public BigDecimal calculateTotalBalance() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .map(Account::getBalance)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   /**
@@ -77,7 +99,10 @@ public class PracticalTasks {
    * @return list of accounts sorted by first and last names
    */
   public List<Account> sortByFirstAndLastNames() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .sorted(comparing(Account::getFirstName)
+            .thenComparing(Account::getLastName))
+        .collect(toList());
   }
 
   /**
@@ -87,7 +112,9 @@ public class PracticalTasks {
    * @return true if there is an account that has an email with provided domain
    */
   public boolean containsAccountWithEmailDomain(String emailDomain) {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .map(Account::getEmail)
+        .anyMatch(email -> email.split("@")[1].equals(emailDomain));
   }
 
   /**
@@ -98,7 +125,11 @@ public class PracticalTasks {
    * @return account balance
    */
   public BigDecimal getBalanceByEmail(String email) {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .filter(account -> account.getEmail().equals(email))
+        .findFirst()
+        .map(Account::getBalance)
+        .orElseThrow(() -> new EntityNotFoundException(String.format("Cannot find Account by email=%s", email)));
   }
 
   /**
@@ -107,7 +138,8 @@ public class PracticalTasks {
    * @return map of accounts by its ids
    */
   public Map<Long, Account> collectAccountsById() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .collect(toMap(Account::getId, identity()));
   }
 
   /**
@@ -118,17 +150,20 @@ public class PracticalTasks {
    * @return map of account by its ids the were created in a particular year
    */
   public Map<String, BigDecimal> collectBalancesByEmailForAccountsCreatedOn(int year) {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .filter(account -> account.getCreationDate().getYear() == year)
+        .collect(toMap(Account::getEmail, Account::getBalance));
   }
 
   /**
    * Returns a {@link Map} where key is {@link Account#lastName} and values is a {@link Set} that contains first names
    * of all accounts with a specific last name.
    *
-   * @return a map where key is a last name and value is a set of first names
+   * @return a map where key is a first name and value is a set of first names
    */
   public Map<String, Set<String>> groupFirstNamesByLastNames() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .collect(groupingBy(Account::getLastName, mapping(Account::getFirstName, toSet())));
   }
 
   /**
@@ -138,7 +173,9 @@ public class PracticalTasks {
    * @return a map where a key is a birthday month and value is comma-separated first names
    */
   public Map<Month, String> groupCommaSeparatedFirstNamesByBirthdayMonth() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .collect(groupingBy(a -> a.getBirthday().getMonth(),
+            mapping(Account::getFirstName, joining(", "))));
   }
 
   /**
@@ -148,8 +185,10 @@ public class PracticalTasks {
    * @return a map where key is a creation month and value is total balance of all accounts created in that month
    */
   public Map<Month, BigDecimal> groupTotalBalanceByCreationMonth() {
-    throw new TaskNotCompletedException();
+    return accounts.stream()
+        .collect(groupingBy(a -> a.getCreationDate().getMonth(),
+            mapping(Account::getBalance,
+                reducing(BigDecimal.ZERO, BigDecimal::add))));
   }
-
 }
 
