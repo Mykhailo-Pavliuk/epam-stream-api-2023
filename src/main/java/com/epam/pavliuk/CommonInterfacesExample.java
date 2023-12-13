@@ -29,7 +29,7 @@ public class CommonInterfacesExample {
     Consumer<String> c2 = System.out::println;
 
     c1.accept("Oil");
-    c1.accept("Gas");
+    c2.accept("Gas");
 
     // BiConsumer
     var map = new HashMap<String, Integer>();
@@ -37,7 +37,7 @@ public class CommonInterfacesExample {
     BiConsumer<String, Integer> bc2 = map::put;
 
     bc1.accept("chicken", 7);
-    bc1.accept("rabbit", 1);
+    bc2.accept("rabbit", 1);
 
     System.out.println(map);
 
