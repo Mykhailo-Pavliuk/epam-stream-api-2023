@@ -12,23 +12,23 @@ public class ImperativeVsDeclarative {
   public static void main(String[] args) {
     List<Account> accounts = Accounts.generateAccountList(100);
 
-    findAllYahooAccountsImperative(accounts);
-    findAllYahooAccountsDeclarative(accounts);
+    findAllGoogleAccountsImperative(accounts);
+    findAllGoogleAccountsDeclarative(accounts);
   }
 
-  private static List<Account> findAllYahooAccountsImperative(List<Account> accounts) {
-    List<Account> yahooAccounts = new ArrayList<>();
+  private static List<Account> findAllGoogleAccountsImperative(List<Account> accounts) {
+    List<Account> googleAccounts = new ArrayList<>();
     for (Account account : accounts) {
-      if (account.getEmail().endsWith("@yahoo.com")) {
-        yahooAccounts.add(account);
+      if (account.getEmail().endsWith("@gmail.com")) {
+        googleAccounts.add(account);
       }
     }
-    return yahooAccounts;
+    return googleAccounts;
   }
 
-  private static List<Account> findAllYahooAccountsDeclarative(List<Account> accounts) {
+  private static List<Account> findAllGoogleAccountsDeclarative(List<Account> accounts) {
     return accounts.stream()
-        .filter(a -> a.getEmail().endsWith("@yahoo.com"))
+        .filter(a -> a.getEmail().endsWith("@gmail.com"))
         .collect(toList());
   }
 
