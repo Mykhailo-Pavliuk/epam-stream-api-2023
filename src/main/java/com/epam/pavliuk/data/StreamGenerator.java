@@ -8,7 +8,7 @@ public class StreamGenerator {
     return Stream.of("monkey", "gorilla", "bonobo", "monkey");
   }
 
-  public static Stream<String> getChars() {
+  public static Stream<String> getLetters() {
     return Stream.of("w", "o", "l", "f");
   }
 

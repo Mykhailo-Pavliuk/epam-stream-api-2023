@@ -46,7 +46,7 @@ public class CommonTerminalOperationsExamples {
     }
     System.out.println(result);
 
-    String charsReduce = StreamGenerator.getChars().reduce("", (s, c) -> s + c);
+    String charsReduce = StreamGenerator.getLetters().reduce("", (s, c) -> s + c);
     System.out.println(charsReduce);
 
     Stream<Integer> streamInts = Stream.of(3, 5, 6);
