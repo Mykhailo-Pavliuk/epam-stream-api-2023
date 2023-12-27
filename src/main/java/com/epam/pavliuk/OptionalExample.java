@@ -15,12 +15,12 @@ public class OptionalExample {
 
     opt.ifPresent(System.out::println);
 
-    System.out.println(average().orElseThrow(
-        () -> new IllegalStateException()
-    ));
+//    System.out.println(average().orElseThrow(
+//        () -> new IllegalStateException()
+//    ));
 
     Optional<Double> emptyResult = average();
-    System.out.println(emptyResult.orElse(Double.NaN));
+    System.out.println(emptyResult.orElse(Math.random()));
     System.out.println(emptyResult.orElseGet(() -> Math.random()));
     System.out.println(emptyResult.orElseThrow());
   }
