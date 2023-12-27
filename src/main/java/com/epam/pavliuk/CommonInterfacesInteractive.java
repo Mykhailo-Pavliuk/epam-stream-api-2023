@@ -10,8 +10,8 @@ public class CommonInterfacesInteractive {
   public static void main(String[] args) {
 //    // FILL THE BLANKS
 //
-//    ...<List > fill1 = x -> "".equals(x.get(0));
-//    ...<Long > fill2 = (Long l) -> System.out.println(l);
+//    ...<List> fill1 = x -> "".equals(x.get(0));
+//    ...<Long> fill2 = (Long l) -> System.out.println(l);
 //    ...<String, String > fill3 = (s1, s2) -> false;
 //
 //    // FIND ERRORS :)
